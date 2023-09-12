@@ -11,8 +11,8 @@ pub:
 	nome       string [nonnull; required; sql_type: 'varchar(100)']
 	apelido    string [nonnull; required; sql_type: 'varchar(32)'; unique]
 	nascimento string [nonnull; required; sql_type: 'char(10)']
-	stack      string [sql_type: 'varchar(1024)']
-	busca_trgm string [sql_type: 'TEXT GENERATED ALWAYS AS (LOWER(nome || apelido || stack)) STORED']
+	stack      string
+	search     string [nonnull; required]
 }
 
 // TODO: Make this a Static method in Pessoa when the intellij plugin supports it
@@ -71,11 +71,14 @@ pub fn (dto &PessoaDto) to_json() string {
 }
 
 pub fn (dto &PessoaDto) to_pessoa() &Pessoa {
+	stack := dto.stack.join(',')
+
 	return &Pessoa{
 		id: dto.id
 		nome: dto.nome
 		apelido: dto.apelido
 		nascimento: dto.nascimento
-		stack: dto.stack.join(',')
+		stack: stack
+		search: '${dto.nome}${dto.apelido}${stack}'.to_lower()
 	}
 }

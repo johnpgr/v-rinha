@@ -20,7 +20,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.8"
+          cpus: "0.7"
           memory: "1.5GB"
     volumes:
       - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
@@ -38,7 +38,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.25"
+          cpus: "0.3"
           memory: "0.5GB"
 
   api2:
@@ -54,7 +54,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.25"
+          cpus: "0.3"
           memory: "0.5GB"
 
   nginx:

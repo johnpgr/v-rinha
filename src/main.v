@@ -7,7 +7,11 @@ import db.pg
 import os
 
 const (
-	port = os.getenv('PORT').int()
+	port = if os.getenv('PORT').int() == 0 {
+		9999
+	} else {
+		os.getenv('PORT').int()
+	}
 )
 
 fn main() {
@@ -20,11 +24,11 @@ fn main() {
 		dbname: 'rinha'
 	)!
 
-	pessoa_service := &services.PessoaService{
-		db: &db
+	pessoa_service := services.PessoaService{
+		db: db
 	}
 
-	pessoa_controller := &controllers.PessoaController{
+	pessoa_controller := controllers.PessoaController{
 		pessoa_service: pessoa_service
 	}
 

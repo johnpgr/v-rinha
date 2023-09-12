@@ -5,7 +5,7 @@ ALTER SYSTEM SET effective_cache_size TO "1GB";
 ALTER SYSTEM SET effective_io_concurrency = 10;
 ALTER SYSTEM SET max_connections = 1000;
 
--- ALTER SYSTEM SET log_min_messages TO "PANIC";
+ALTER SYSTEM SET log_min_messages TO "PANIC";
 -- ALTER SYSTEM SET log_min_error_statement TO "PANIC";
 ALTER SYSTEM SET log_lock_waits = ON;
 ALTER SYSTEM SET fsync = OFF;
@@ -15,10 +15,8 @@ CREATE TABLE IF NOT EXISTS pessoas (
     apelido VARCHAR(32) NOT NULL UNIQUE,
     nome VARCHAR(100) NOT NULL,
     nascimento CHAR(10) NOT NULL,
-    stack VARCHAR(1024),
-    busca_trgm TEXT GENERATED ALWAYS AS (
-    LOWER(nome || apelido || stack)
-    ) STORED
+    stack TEXT NOT NULL,
+    search TEXT NOT NULL
 );
 
 CREATE EXTENSION PG_TRGM;

@@ -8,7 +8,7 @@ import pessoas.controllers
 import utils
 
 pub struct App {
-	pessoas_controller &controllers.PessoaController [required]
+	pessoas_controller controllers.PessoaController [required]
 }
 
 [inline]
