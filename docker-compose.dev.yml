@@ -1,0 +1,33 @@
+version: "3.5"
+
+networks:
+  rinha:
+    driver: bridge
+
+volumes:
+  postgres:
+
+services:
+  database:
+    image: postgres:latest
+    hostname: database
+    environment:
+      POSTGRES_PASSWORD: dev
+      POSTGRES_USER: dev
+      POSTGRES_DB: rinha
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U dev -d rinha" ]
+      interval: 5s
+      timeout: 5s
+    deploy:
+      resources:
+        limits:
+          cpus: "0.8"
+          memory: "1.5GB"
+    ports:
+      - "5432:5432"
+    networks:
+      - rinha
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
