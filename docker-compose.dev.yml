@@ -20,14 +20,13 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U dev -d rinha" ]
       interval: 5s
       timeout: 5s
+    network_mode: host
     deploy:
       resources:
         limits:
-          cpus: "0.8"
+          cpus: "0.7"
           memory: "1.5GB"
-    ports:
-      - "5432:5432"
-    networks:
-      - rinha
     volumes:
+      - ./postgresql.conf:/docker-entrypoint-initdb.d/postgresql.conf
       - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    command: postgres -c config_file=/docker-entrypoint-initdb.d/postgresql.conf

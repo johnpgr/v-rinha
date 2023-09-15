@@ -13,7 +13,7 @@ const (
 )
 
 fn main() {
-	pool := vweb.database_pool(handler: create_connection, nr_workers: 20)
+	pool := vweb.database_pool(handler: create_connection)
 	app := &App{
 		db_handle: pool
 		controllers: [

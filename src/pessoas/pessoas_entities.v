@@ -2,20 +2,18 @@ module pessoas
 
 import json
 import time
-import rand
 
 [table: 'pessoas']
 pub struct Pessoa {
 pub:
-	id         string [primary; sql_type: 'varchar(36)']
+	id         string [primary; sql_type: 'uuid']
 	nome       string [nonnull; required; sql_type: 'varchar(100)']
 	apelido    string [nonnull; required; sql_type: 'varchar(32)'; unique]
 	nascimento string [nonnull; required; sql_type: 'char(10)']
 	stack      string
-	search     string [nonnull; required]
+	search     string [nonnull]
 }
 
-// pessoa_from_json TODO: Make this a Static method in Pessoa when the intellij plugin supports it
 pub fn pessoa_from_json(json_str string) !&Pessoa {
 	return pessoadto_from_json(json_str)!.to_pessoa()
 }
@@ -48,7 +46,6 @@ mut:
 	id string
 }
 
-// pessoadto_from_json TODO: Make this a Static method in PessoaDto when the intellij plugin supports it
 pub fn pessoadto_from_json(data string) !&PessoaDto {
 	mut dto := json.decode(PessoaDto, data)!
 	time.parse_format(dto.nascimento, 'YYYY-MM-DD') or {
@@ -62,7 +59,6 @@ pub fn pessoadto_from_json(data string) !&PessoaDto {
 		return error('invalid nome length. max: 100')
 	}
 
-	dto.id = rand.uuid_v4()
 	return &dto
 }
 
@@ -79,6 +75,5 @@ pub fn (dto &PessoaDto) to_pessoa() &Pessoa {
 		apelido: dto.apelido
 		nascimento: dto.nascimento
 		stack: stack
-		search: '${dto.nome}${dto.apelido}${stack}'.to_lower()
 	}
 }

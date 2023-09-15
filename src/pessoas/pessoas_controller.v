@@ -29,12 +29,12 @@ fn (mut c PessoasController) handle_create_pessoa() vweb.Result {
 		return c.text('')
 	}
 
-	c.save_pessoa(pessoa) or {
+	id := c.save_pessoa(pessoa) or {
 		c.set_status(422, '')
 		return c.text('')
 	}
 
-	c.add_header('Location', '/pessoas/${pessoa.id}')
+	c.add_header('Location', '/pessoas/${id}')
 	c.set_status(201, '')
 	return c.text('')
 }
@@ -58,7 +58,7 @@ fn (mut c PessoasController) handle_get_pessoa_by_termo() vweb.Result {
 		return c.text('')
 	}
 
-	pessoas := c.find_pessoas_by_termo(termo)
+	pessoa_list := c.find_pessoas_by_termo(termo)
 
-	return c.json(pessoas)
+	return c.json(pessoa_list)
 }

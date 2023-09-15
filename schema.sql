@@ -1,22 +1,12 @@
-ALTER DATABASE rinha set synchronous_commit=OFF;
-
-ALTER SYSTEM SET shared_buffers TO "512MB";
-ALTER SYSTEM SET effective_cache_size TO "1GB";
-ALTER SYSTEM SET effective_io_concurrency = 10;
-ALTER SYSTEM SET max_connections = 1000;
-
-ALTER SYSTEM SET log_min_messages TO "PANIC";
--- ALTER SYSTEM SET log_min_error_statement TO "PANIC";
-ALTER SYSTEM SET log_lock_waits = ON;
-ALTER SYSTEM SET fsync = OFF;
-
 CREATE TABLE IF NOT EXISTS pessoas (
-    id VARCHAR(36) PRIMARY KEY NOT NULL,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     apelido VARCHAR(32) NOT NULL UNIQUE,
     nome VARCHAR(100) NOT NULL,
     nascimento CHAR(10) NOT NULL,
     stack TEXT NOT NULL,
-    search TEXT NOT NULL
+    search TEXT GENERATED ALWAYS AS (
+    LOWER(nome || apelido || stack)
+    ) STORED
 );
 
 CREATE EXTENSION PG_TRGM;
