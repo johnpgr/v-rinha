@@ -1,10 +1,8 @@
 module main
 
-import picoev
-import pessoas.controllers
-import pessoas.services
-import db.pg
 import os
+import vweb
+import pessoas{ PessoasController }
 
 const (
 	port = if os.getenv('PORT').int() == 0 {
@@ -15,32 +13,19 @@ const (
 )
 
 fn main() {
-	// TODO: Make a dependency injection container
-	db := pg.connect(
-		host: 'localhost'
-		port: 5432
-		user: 'dev'
-		password: 'dev'
-		dbname: 'rinha'
-	)!
+	pool := vweb.database_pool(handler: create_connection, nr_workers: 20)
 
-	pessoa_service := services.PessoaService{
-		db: db
-	}
-
-	pessoa_controller := controllers.PessoaController{
-		pessoa_service: pessoa_service
-	}
-
-	app := &App{
-		pessoas_controller: pessoa_controller
-	}
-
-	mut server := picoev.new(
+	vweb.run_at(&App{
+		db_handle: pool
+		controllers: [
+			vweb.controller('/pessoas', &PessoasController{
+				db_handle: pool
+			})
+		]
+	},
+		nr_workers: 6
+		family: .ip
 		port: port
-		cb: app.callback
-	)
-
-	println('Server listening on port: ${port}')
-	server.serve()
+		host: '0.0.0.0'
+	)!
 }

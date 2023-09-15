@@ -1,4 +1,4 @@
-module main
+module pessoas
 
 import json
 import time
@@ -7,7 +7,7 @@ import rand
 [table: 'pessoas']
 pub struct Pessoa {
 pub:
-	id         string [primary; sql_type: 'varchar(26)']
+	id         string [primary; sql_type: 'varchar(36)']
 	nome       string [nonnull; required; sql_type: 'varchar(100)']
 	apelido    string [nonnull; required; sql_type: 'varchar(32)'; unique]
 	nascimento string [nonnull; required; sql_type: 'char(10)']
@@ -20,7 +20,7 @@ pub fn pessoa_from_json(json_str string) !&Pessoa {
 	return pessoadto_from_json(json_str)!.to_pessoa()
 }
 
-pub fn (p Pessoa) to_dto() &PessoaDto {
+pub fn (p &Pessoa) to_dto() &PessoaDto {
 	return &PessoaDto{
 		id: p.id
 		nome: p.nome
@@ -30,11 +30,11 @@ pub fn (p Pessoa) to_dto() &PessoaDto {
 	}
 }
 
-pub fn (p Pessoa) to_json() string {
+pub fn (p &Pessoa) to_json() string {
 	return p.to_dto().to_json()
 }
 
-pub fn (p []Pessoa) to_json() string {
+pub fn (p &[]Pessoa) to_json() string {
 	dto_list := p.map(*it.to_dto())
 	return json.encode(dto_list)
 }
@@ -62,7 +62,7 @@ pub fn pessoadto_from_json(data string) !&PessoaDto {
 		return error('invalid nome length. max: 100')
 	}
 
-	dto.id = rand.ulid()
+	dto.id = rand.uuid_v4()
 	return &dto
 }
 
