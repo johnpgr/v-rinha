@@ -1,4 +1,4 @@
-module models
+module main
 
 import json
 import time
@@ -15,7 +15,7 @@ pub:
 	search     string [nonnull; required]
 }
 
-// TODO: Make this a Static method in Pessoa when the intellij plugin supports it
+// pessoa_from_json TODO: Make this a Static method in Pessoa when the intellij plugin supports it
 pub fn pessoa_from_json(json_str string) !&Pessoa {
 	return pessoadto_from_json(json_str)!.to_pessoa()
 }
@@ -48,7 +48,7 @@ mut:
 	id string
 }
 
-// TODO: Make this a Static method in PessoaDto when the intellij plugin supports it
+// pessoadto_from_json TODO: Make this a Static method in PessoaDto when the intellij plugin supports it
 pub fn pessoadto_from_json(data string) !&PessoaDto {
 	mut dto := json.decode(PessoaDto, data)!
 	time.parse_format(dto.nascimento, 'YYYY-MM-DD') or {
