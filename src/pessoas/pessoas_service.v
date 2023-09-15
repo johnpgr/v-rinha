@@ -37,6 +37,6 @@ fn (mut c PessoasController) find_pessoa_by_apelido(apelido string) ?Pessoa {
 
 fn (mut c PessoasController) find_pessoas_by_termo(termo string) []Pessoa {
 	return sql c.db {
-		select from Pessoa where search like '%${termo}%'
+		select from Pessoa where search like '%${termo}%' limit 50
 	} or { return []Pessoa{} }
 }

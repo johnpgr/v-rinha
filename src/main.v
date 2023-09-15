@@ -2,7 +2,7 @@ module main
 
 import os
 import vweb
-import pessoas{ PessoasController }
+import pessoas { PessoasController }
 
 const (
 	port = if os.getenv('PORT').int() == 0 {
@@ -14,18 +14,14 @@ const (
 
 fn main() {
 	pool := vweb.database_pool(handler: create_connection, nr_workers: 20)
-
-	vweb.run_at(&App{
+	app := &App{
 		db_handle: pool
 		controllers: [
 			vweb.controller('/pessoas', &PessoasController{
 				db_handle: pool
-			})
+			}),
 		]
-	},
-		nr_workers: 6
-		family: .ip
-		port: port
-		host: '0.0.0.0'
-	)!
+	}
+
+	vweb.run(app, port)
 }

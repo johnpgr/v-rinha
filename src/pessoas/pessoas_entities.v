@@ -34,7 +34,7 @@ pub fn (p &Pessoa) to_json() string {
 	return p.to_dto().to_json()
 }
 
-pub fn (p &[]Pessoa) to_json() string {
+pub fn (p []Pessoa) to_json() string {
 	dto_list := p.map(*it.to_dto())
 	return json.encode(dto_list)
 }
